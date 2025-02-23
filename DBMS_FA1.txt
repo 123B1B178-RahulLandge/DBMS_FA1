@@ -1,0 +1,590 @@
+mysql> CREATE DATABASE pet_adoption;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> USE pet_adoption;
+Database changed
+
+mysql> CREATE TABLE Applicant (
+    -> application_id INT NOT NULL,
+    -> email_id VARCHAR(255) PRIMARY KEY,
+    -> application_name VARCHAR(255) NOT NULL,
+    -> address TEXT NOT NULL,
+    -> application_status VARCHAR(50) NOT NULL,
+    -> date_of_application DATE NOT NULL
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE Applicant_Phone (
+    -> email_id VARCHAR(255) NOT NULL,
+    -> phone_number VARCHAR(20) NOT NULL,
+    -> PRIMARY KEY (email_id, phone_number),
+    -> FOREIGN KEY (email_id) REFERENCES Applicant(email_id) ON DELETE
+    -> CASCADE
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Employee (
+    -> email_id VARCHAR(255) PRIMARY KEY,
+    -> name VARCHAR(255) NOT NULL,
+    -> contact VARCHAR(20) NOT NULL,
+    -> address TEXT NOT NULL
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Employee_Phone (
+    -> employee_id VARCHAR(255) NOT NULL,
+    -> phone_no VARCHAR(20) NOT NULL,
+    -> PRIMARY KEY (employee_id, phone_no),
+    -> FOREIGN KEY (employee_id) REFERENCES Employee(email_id) ON DELETE
+    -> CASCADE
+    -> 
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE Adoption (
+    -> adoption_id INT PRIMARY KEY,
+    -> adoption_status VARCHAR(50) NOT NULL,
+    -> adoption_date DATE NOT NULL,
+    -> adoption_notes TEXT
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE Species (
+    -> species VARCHAR(100) PRIMARY KEY,
+    -> life_span INT NOT NULL
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Animal (
+    -> reg_id INT PRIMARY KEY,
+    -> species VARCHAR(100) NOT NULL,
+    -> age INT NOT NULL,
+    -> 
+    -> gender VARCHAR(10) NOT NULL,
+    -> health_status VARCHAR(50) NOT NULL);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Animal_Adoption (
+    -> reg_id INT NOT NULL,
+    -> adoption_id INT NOT NULL,
+    -> PRIMARY KEY (reg_id, adoption_id),
+    -> FOREIGN KEY (reg_id) REFERENCES Animal(reg_id) ON DELETE CASCADE,
+    -> FOREIGN KEY (adoption_id) REFERENCES Adoption(adoption_id) ON
+    -> DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TABLE Medical_Record (
+    -> reg_id INT NOT NULL,
+    -> vaccination_name VARCHAR(255) NOT NULL,
+    -> vaccination_date DATE NOT NULL,
+    -> status VARCHAR(50) NOT NULL,
+    -> PRIMARY KEY (reg_id, vaccination_name, vaccination_date),
+    -> FOREIGN KEY (reg_id) REFERENCES Animal(reg_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE Shelter (
+    -> location VARCHAR(255) PRIMARY KEY,
+    -> status VARCHAR(50) NOT NULL,
+    -> date DATE NOT NULL,
+    -> time TIME NOT NULL
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Pantry_Management (
+    -> item_name VARCHAR(255) NOT NULL,
+    -> date DATE NOT NULL,
+    -> amount INT NOT NULL,
+    -> PRIMARY KEY (item_name, date)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Charity_Detail (
+    -> name VARCHAR(255) NOT NULL,
+    -> date DATE NOT NULL,
+    -> amount DECIMAL(10,2) NOT NULL,
+    -> PRIMARY KEY (name, date)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> CREATE TABLE Accounts (
+    -> expenses DECIMAL(10,2) NOT NULL,
+    -> date DATE NOT NULL PRIMARY KEY,
+    -> total_charity DECIMAL(10,2) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> INSERT INTO Accounts (expenses, date, total_charity)
+    -> VALUES
+    -> (1500.00, '2025-02-23', 500.00),
+    -> (1200.00, '2025-02-20', 400.00),
+    -> (1800.00, '2025-02-19', 600.00),
+    -> (1100.00, '2025-02-18', 450.00),
+    -> (2000.00, '2025-02-17', 650.00);
+Query OK, 5 rows affected (0.03 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Adoption (adoption_id, adoption_status, adoption_date,
+    -> adoption_notes)
+    -> VALUES
+    -> (101, 'Completed', '2025-02-20', 'Adopted by a loving family'),
+    -> (102, 'Pending', '2025-02-21', 'Awaiting home visit approval'),
+    -> (103, 'Completed', '2025-02-18', 'Adopted by a couple in the city'),
+    -> (104, 'Completed', '2025-02-16', 'Family ready to adopt'),
+    -> (105, 'Pending', '2025-02-22', 'Waiting for medical checkup');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Animal (reg_id, species, age, gender, health_status)
+    -> VALUES
+    -> (201, 'Dog', 2, 'Male', 'Healthy'),
+    -> (202, 'Cat', 3, 'Female', 'Healthy'),
+    -> (203, 'Rabbit', 1, 'Male', 'Healthy'),
+    -> (204, 'Dog', 4, 'Female', 'Needs treatment'),
+    -> (205, 'Parrot', 5, 'Male', 'Healthy');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Medical_Record (reg_id, vaccination_name, vaccination_date,
+    -> status)
+    -> VALUES
+    -> (201, 'Rabies', '2025-03-01', 'Completed'),
+    -> (202, 'Rabies', '2025-03-05', 'Completed'),
+    -> (203, 'Rabies', '2025-03-10', 'Completed'),
+    -> (204, 'Rabies', '2025-03-15', 'Completed'),
+    -> (205, 'Rabies', '2025-03-20', 'Completed');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Animal_Adoption (reg_id, adoption_id)
+    -> VALUES
+    -> (201, 101),
+    -> (202, 102),
+    -> (203, 103),
+    -> (204, 104),
+    -> (205, 105);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Applicant (application_id, email_id, application_name, address,
+    -> application_status, date_of_application)
+    -> VALUES
+    -> (301, 'applicant1@example.com', 'John Doe', '123 Elm Street, City, Country',
+    -> 'Approved', '2025-02-15'),
+    -> (302, 'applicant2@example.com', 'Jane Smith', '456 Pine Road, City, Country',
+    -> 'Pending', '2025-02-16'),
+    -> (303, 'applicant3@example.com', 'Samuel Adams', '789 Birch Avenue, City,
+    '> Country', 'Approved', '2025-02-17'),
+    -> (304, 'applicant4@example.com', 'Mary Johnson', '123 Maple Lane, City,
+    '> Country', 'Rejected', '2025-02-18'),
+    -> (305, 'applicant5@example.com', 'Robert Brown', '101 Oak Street, City, Country',
+    -> 'Approved', '2025-02-19');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Applicant_Phone (email_id, phone_number)
+    -> VALUES
+    -> ('applicant1@example.com', '123-456-7890'),
+    -> ('applicant2@example.com', '234-567-8901'),
+    -> ('applicant3@example.com', '345-678-9012'),
+    -> ('applicant4@example.com', '456-789-0123'),
+    -> ('applicant5@example.com', '567-890-1234');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Charity_Detail (name, date, amount)
+    -> VALUES
+    -> ('Animal Rescue Fund', '2025-02-01', 2000.00),
+    -> ('Hope for Animals', '2025-01-15', 1500.00),
+    -> ('Save a Pet', '2025-02-10', 1000.00),
+    -> ('Animal Shelter Donation', '2025-02-05', 1200.00),
+    -> ('Pets in Need', '2025-02-12', 800.00);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Employee (email_id, name, contact, address)
+    -> VALUES
+    -> ('employee1@example.com', 'Alice Johnson', '987-654-3210', '456 Oak Avenue,
+    '> City, Country'),
+    -> ('employee2@example.com', 'Bob Green', '876-543-2109', '789 Maple Street,
+    '> City, Country'),
+    -> ('employee3@example.com', 'Charlie Brown', '765-432-1098', '123 Elm Street,
+    '> City, Country'),
+    -> 
+    -> ('employee4@example.com', 'David White', '654-321-0987', '321 Pine Road, City,
+    '> Country'),
+    -> ('employee5@example.com', 'Eva Davis', '543-210-9876', '654 Birch Lane, City,
+    '> Country');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Employee_Phone (employee_id, phone_no)
+    -> VALUES
+    -> ('employee1@example.com', '987-654-3210'),
+    -> ('employee2@example.com', '876-543-2109'),
+    -> ('employee3@example.com', '765-432-1098'),
+    -> ('employee4@example.com', '654-321-0987'),
+    -> ('employee5@example.com', '543-210-9876');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Pantry_Management (item_name, date, amount)
+    -> VALUES
+    -> ('Dog Food', '2025-02-20', 300.00),
+    -> ('Cat Food', '2025-02-19', 250.00),
+    -> ('Bird Seed', '2025-02-18', 100.00),
+    -> ('Rabbit Food', '2025-02-17', 120.00),
+    -> ('Horse Feed', '2025-02-16', 500.00);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Shelter (location, status, date, time)
+    -> VALUES
+    -> ('Main Shelter', 'Active', '2025-02-23', '09:00'),
+    -> ('North Shelter', 'Inactive', '2025-02-22', '10:00'),
+    -> ('East Shelter', 'Active', '2025-02-21', '08:00'),
+    -> ('South Shelter', 'Active', '2025-02-20', '11:00'),
+    -> ('West Shelter', 'Inactive', '2025-02-19', '07:00');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Species (species, life_span)
+    -> VALUES
+    -> ('Dog', 12),
+    -> ('Cat', 15),
+    -> ('Rabbit', 8),
+    -> ('Parrot', 50),
+    -> ('Horse', 30);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SHOW TABLES;
++------------------------+
+| Tables_in_pet_adoption |
++------------------------+
+| Accounts               |
+| Adoption               |
+| Animal                 |
+| Animal_Adoption        |
+| Applicant              |
+| Applicant_Phone        |
+| Charity_Detail         |
+| Employee               |
+| Employee_Phone         |
+| Medical_Record         |
+| Pantry_Management      |
+| Shelter                |
+| Species                |
++------------------------+
+13 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Accounts;
++----------+------------+---------------+
+| expenses | date       | total_charity |
++----------+------------+---------------+
+|  2000.00 | 2025-02-17 |        650.00 |
+|  1100.00 | 2025-02-18 |        450.00 |
+|  1800.00 | 2025-02-19 |        600.00 |
+|  1200.00 | 2025-02-20 |        400.00 |
+|  1500.00 | 2025-02-23 |        500.00 |
++----------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Adoption;
++-------------+-----------------+---------------+---------------------------------+
+| adoption_id | adoption_status | adoption_date | adoption_notes                  |
++-------------+-----------------+---------------+---------------------------------+
+|         101 | Completed       | 2025-02-20    | Adopted by a loving family      |
+|         102 | Pending         | 2025-02-21    | Awaiting home visit approval    |
+|         103 | Completed       | 2025-02-18    | Adopted by a couple in the city |
+|         104 | Completed       | 2025-02-16    | Family ready to adopt           |
+|         105 | Pending         | 2025-02-22    | Waiting for medical checkup     |
++-------------+-----------------+---------------+---------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Animal;
++--------+---------+-----+--------+-----------------+
+| reg_id | species | age | gender | health_status   |
++--------+---------+-----+--------+-----------------+
+|    201 | Dog     |   2 | Male   | Healthy         |
+|    202 | Cat     |   3 | Female | Healthy         |
+|    203 | Rabbit  |   1 | Male   | Healthy         |
+|    204 | Dog     |   4 | Female | Needs treatment |
+|    205 | Parrot  |   5 | Male   | Healthy         |
++--------+---------+-----+--------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Animal_Adoption;
++--------+-------------+
+| reg_id | adoption_id |
++--------+-------------+
+|    201 |         101 |
+|    202 |         102 |
+|    203 |         103 |
+|    204 |         104 |
+|    205 |         105 |
++--------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Applicant;
++----------------+------------------------+------------------+---------------------------------+--------------------+---------------------+
+| application_id | email_id               | application_name | address                         | application_status | date_of_application |
++----------------+------------------------+------------------+---------------------------------+--------------------+---------------------+
+|            301 | applicant1@example.com | John Doe         | 123 Elm Street, City, Country   | Approved           | 2025-02-15          |
+|            302 | applicant2@example.com | Jane Smith       | 456 Pine Road, City, Country    | Pending            | 2025-02-16          |
+|            303 | applicant3@example.com | Samuel Adams     | 789 Birch Avenue, City,
+Country | Approved           | 2025-02-17          |
+|            304 | applicant4@example.com | Mary Johnson     | 123 Maple Lane, City,
+Country   | Rejected           | 2025-02-18          |
+|            305 | applicant5@example.com | Robert Brown     | 101 Oak Street, City, Country   | Approved           | 2025-02-19          |
++----------------+------------------------+------------------+---------------------------------+--------------------+---------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Applicant_Phone;
++------------------------+--------------+
+| email_id               | phone_number |
++------------------------+--------------+
+| applicant1@example.com | 123-456-7890 |
+| applicant2@example.com | 234-567-8901 |
+| applicant3@example.com | 345-678-9012 |
+| applicant4@example.com | 456-789-0123 |
+| applicant5@example.com | 567-890-1234 |
++------------------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Charity_Detail;
++-------------------------+------------+---------+
+| name                    | date       | amount  |
++-------------------------+------------+---------+
+| Animal Rescue Fund      | 2025-02-01 | 2000.00 |
+| Animal Shelter Donation | 2025-02-05 | 1200.00 |
+| Hope for Animals        | 2025-01-15 | 1500.00 |
+| Pets in Need            | 2025-02-12 |  800.00 |
+| Save a Pet              | 2025-02-10 | 1000.00 |
++-------------------------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Employee;
++-----------------------+---------------+--------------+---------------------------------+
+| email_id              | name          | contact      | address                         |
++-----------------------+---------------+--------------+---------------------------------+
+| employee1@example.com | Alice Johnson | 987-654-3210 | 456 Oak Avenue,
+City, Country   |
+| employee2@example.com | Bob Green     | 876-543-2109 | 789 Maple Street,
+City, Country |
+| employee3@example.com | Charlie Brown | 765-432-1098 | 123 Elm Street,
+City, Country   |
+| employee4@example.com | David White   | 654-321-0987 | 321 Pine Road, City,
+Country    |
+| employee5@example.com | Eva Davis     | 543-210-9876 | 654 Birch Lane, City,
+Country   |
++-----------------------+---------------+--------------+---------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Employee_Phone;
++-----------------------+--------------+
+| employee_id           | phone_no     |
++-----------------------+--------------+
+| employee1@example.com | 987-654-3210 |
+| employee2@example.com | 876-543-2109 |
+| employee3@example.com | 765-432-1098 |
+| employee4@example.com | 654-321-0987 |
+| employee5@example.com | 543-210-9876 |
++-----------------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Medical_Record;
++--------+------------------+------------------+-----------+
+| reg_id | vaccination_name | vaccination_date | status    |
++--------+------------------+------------------+-----------+
+|    201 | Rabies           | 2025-03-01       | Completed |
+|    202 | Rabies           | 2025-03-05       | Completed |
+|    203 | Rabies           | 2025-03-10       | Completed |
+|    204 | Rabies           | 2025-03-15       | Completed |
+|    205 | Rabies           | 2025-03-20       | Completed |
++--------+------------------+------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Pantry_Management;
++-------------+------------+--------+
+| item_name   | date       | amount |
++-------------+------------+--------+
+| Bird Seed   | 2025-02-18 |    100 |
+| Cat Food    | 2025-02-19 |    250 |
+| Dog Food    | 2025-02-20 |    300 |
+| Horse Feed  | 2025-02-16 |    500 |
+| Rabbit Food | 2025-02-17 |    120 |
++-------------+------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Shelter;
++---------------+----------+------------+----------+
+| location      | status   | date       | time     |
++---------------+----------+------------+----------+
+| East Shelter  | Active   | 2025-02-21 | 08:00:00 |
+| Main Shelter  | Active   | 2025-02-23 | 09:00:00 |
+| North Shelter | Inactive | 2025-02-22 | 10:00:00 |
+| South Shelter | Active   | 2025-02-20 | 11:00:00 |
+| West Shelter  | Inactive | 2025-02-19 | 07:00:00 |
++---------------+----------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Species;
++---------+-----------+
+| species | life_span |
++---------+-----------+
+| Cat     |        15 |
+| Dog     |        12 |
+| Horse   |        30 |
+| Parrot  |        50 |
+| Rabbit  |         8 |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+1. Get all adopted animals along with their adoption status and
+adoption date:
+mysql> SELECT Animal.reg_id, Animal.species, Animal.age, Adoption.adoption_status,
+    -> Adoption.adoption_date
+    -> FROM Animal
+    -> JOIN Animal_Adoption ON Animal.reg_id = Animal_Adoption.reg_id
+    -> JOIN Adoption ON Animal_Adoption.adoption_id = Adoption.adoption_id;
++--------+---------+-----+-----------------+---------------+
+| reg_id | species | age | adoption_status | adoption_date |
++--------+---------+-----+-----------------+---------------+
+|    201 | Dog     |   2 | Completed       | 2025-02-20    |
+|    202 | Cat     |   3 | Pending         | 2025-02-21    |
+|    203 | Rabbit  |   1 | Completed       | 2025-02-18    |
+|    204 | Dog     |   4 | Completed       | 2025-02-16    |
+|    205 | Parrot  |   5 | Pending         | 2025-02-22    |
++--------+---------+-----+-----------------+---------------+
+5 rows in set (0.00 sec)
+
+2. Find the applicants who have been approved for adoption:
+mysql> SELECT application_id, application_name, email_id, address,
+    -> date_of_application
+    -> FROM Applicant
+    -> WHERE application_status = 'Approved';
++----------------+------------------+------------------------+---------------------------------+---------------------+
+| application_id | application_name | email_id               | address                         | date_of_application |
++----------------+------------------+------------------------+---------------------------------+---------------------+
+|            301 | John Doe         | applicant1@example.com | 123 Elm Street, City, Country   | 2025-02-15          |
+|            303 | Samuel Adams     | applicant3@example.com | 789 Birch Avenue, City,
+Country | 2025-02-17          |
+|            305 | Robert Brown     | applicant5@example.com | 101 Oak Street, City, Country   | 2025-02-19          |
++----------------+------------------+------------------------+---------------------------------+---------------------+
+3 rows in set (0.00 sec)
+
+3. Get a list of all employees and their phone numbers:
+mysql> SELECT Employee.name, Employee_Phone.phone_no
+    -> FROM Employee
+    -> JOIN Employee_Phone ON Employee.email_id =
+    -> Employee_Phone.employee_id;
++---------------+--------------+
+| name          | phone_no     |
++---------------+--------------+
+| Alice Johnson | 987-654-3210 |
+| Bob Green     | 876-543-2109 |
+| Charlie Brown | 765-432-1098 |
+| David White   | 654-321-0987 |
+| Eva Davis     | 543-210-9876 |
++---------------+--------------+
+5 rows in set (0.00 sec)
+
+4.Retrieve the total charity amount for each charity organization:
+mysql> SELECT name, SUM(amount) AS total_charity
+    -> FROM Charity_Detail
+    -> GROUP BY name;
++-------------------------+---------------+
+| name                    | total_charity |
++-------------------------+---------------+
+| Animal Rescue Fund      |       2000.00 |
+| Animal Shelter Donation |       1200.00 |
+| Hope for Animals        |       1500.00 |
+| Pets in Need            |        800.00 |
+| Save a Pet              |       1000.00 |
++-------------------------+---------------+
+5 rows in set (0.01 sec)
+
+5. Get a list of animals that are in need of treatment:
+mysql> SELECT reg_id, species, age, gender, health_status
+    -> FROM Animal
+    -> WHERE health_status = 'Needs treatment';
++--------+---------+-----+--------+-----------------+
+| reg_id | species | age | gender | health_status   |
++--------+---------+-----+--------+-----------------+
+|    204 | Dog     |   4 | Female | Needs treatment |
++--------+---------+-----+--------+-----------------+
+1 row in set (0.00 sec)
+
+6. Find the total expenses for a specific date:
+mysql> SELECT SUM(expenses) AS total_expenses
+    -> FROM Accounts
+    -> 
+    -> WHERE date = '2025-02-23';
++----------------+
+| total_expenses |
++----------------+
+|        1500.00 |
++----------------+
+1 row in set (0.00 sec)
+
+7. Get the vaccination records for each animal along with their
+vaccination dates:
+mysql> SELECT Animal.reg_id, Animal.species, Medical_Record.vaccination_name,
+    -> Medical_Record.vaccination_date, Medical_Record.status
+    -> FROM Animal
+    -> JOIN Medical_Record ON Animal.reg_id = Medical_Record.reg_id;
++--------+---------+------------------+------------------+-----------+
+| reg_id | species | vaccination_name | vaccination_date | status    |
++--------+---------+------------------+------------------+-----------+
+|    201 | Dog     | Rabies           | 2025-03-01       | Completed |
+|    202 | Cat     | Rabies           | 2025-03-05       | Completed |
+|    203 | Rabbit  | Rabies           | 2025-03-10       | Completed |
+|    204 | Dog     | Rabies           | 2025-03-15       | Completed |
+|    205 | Parrot  | Rabies           | 2025-03-20       | Completed |
++--------+---------+------------------+------------------+-----------+
+5 rows in set (0.00 sec)
+
+8. Find the total amount of food spent on pets in the shelter on a
+given date:
+mysql> SELECT SUM(amount) AS total_food_expense
+    -> FROM Pantry_Management
+    -> WHERE date = '2025-02-20';
++--------------------+
+| total_food_expense |
++--------------------+
+|                300 |
++--------------------+
+1 row in set (0.00 sec)
+
+9. Get a list of all active shelters along with their location and status:
+mysql> SELECT location, status, date, time
+    -> FROM Shelter
+    -> WHERE status = 'Active';
++---------------+--------+------------+----------+
+| location      | status | date       | time     |
++---------------+--------+------------+----------+
+| East Shelter  | Active | 2025-02-21 | 08:00:00 |
+| Main Shelter  | Active | 2025-02-23 | 09:00:00 |
+| South Shelter | Active | 2025-02-20 | 11:00:00 |
++---------------+--------+------------+----------+
+3 rows in set (0.00 sec)
+
+10. Get a list of all animals along with their health status:
+mysql> SELECT reg_id, species, age, health_status
+    -> FROM Animal;
++--------+---------+-----+-----------------+
+| reg_id | species | age | health_status   |
++--------+---------+-----+-----------------+
+|    201 | Dog     |   2 | Healthy         |
+|    202 | Cat     |   3 | Healthy         |
+|    203 | Rabbit  |   1 | Healthy         |
+|    204 | Dog     |   4 | Needs treatment |
+|    205 | Parrot  |   5 | Healthy         |
++--------+---------+-----+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+
+
